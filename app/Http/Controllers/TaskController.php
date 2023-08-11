@@ -8,15 +8,18 @@ use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
+    
     public function index() {
         $tasks = Task::get();
         return view('dashboard', compact('tasks'));
     }
 
+    
     public function insert(){
         return view('tasks.create');
     }
 
+    
     public function store(Request $request) {
         request()->validate([
             'name' => 'required|max:255',
@@ -30,6 +33,7 @@ class TaskController extends Controller
         $task->save();
     }
 
+    
     public function edit($id) {
         $task = Task::findOrFail($id);
         if(Auth::user()->id == $task->user_id){
@@ -39,6 +43,7 @@ class TaskController extends Controller
         return redirect()->back()->with('error', 'You cannot do this action');
     }
 
+    
     public function update(Request $request, $id){
         request()->validate([
             'name' => 'required|max:255',
@@ -56,6 +61,7 @@ class TaskController extends Controller
         return redirect()->back()->with('error', 'You cannot do this action');
     }
 
+    
     public function delete($id) {
         $task = Task::findOrFail($id);
         if(Auth::user()->id == $task->user_id){

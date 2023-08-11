@@ -31,10 +31,15 @@ Route::middleware('auth')->group(function () {
     //Tasks
 
     Route::get('tasks', [TaskController::class, 'index']);
+
     Route::get('tasks/create', [TaskController::class, 'create']);
+    
     Route::post('tasks/create', [TaskController::class, 'store']);
+    
     Route::get('tasks/edit/{id}', [TaskController::class, 'edit']);
+    
     Route::post('tasks/edit/{id}', [TaskController::class, 'update']);
+    
     Route::get('/tasks/delete/{id}', [TaskController::class, 'delete']);
 
 });
