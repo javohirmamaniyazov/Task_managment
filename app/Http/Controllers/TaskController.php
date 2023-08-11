@@ -10,7 +10,7 @@ class TaskController extends Controller
 {
     public function index() {
         $tasks = Task::get();
-        return view('tasks.index', compact('tasks'));
+        return view('dashboard', compact('tasks'));
     }
 
     public function insert(){
