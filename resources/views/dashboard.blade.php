@@ -11,16 +11,19 @@
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
     </script>
     <title>Document</title>
+    <style>
+        .dropdown-menu[data-bs-popper]{
+            right: 0;
+        }
+    </style>
 </head>
 
 <body>
 
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
         <div class="container">
             <a class="navbar-brand" href="/dashboard">Task App</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -33,14 +36,38 @@
                     </li>
                 </ul>
             </div>
+    
+            <div class="d-none d-sm-flex items-center ml-3">
+                <div class="dropdown">
+                    <a class="btn btn-light btn-sm dropdown-toggle" href="#" role="button" id="settingsDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ Auth::user()->name }}
+                    
+                    </a>
+            
+                    <div class="dropdown-menu dropdown-menu-left" aria-labelledby="settingsDropdown">
+                        <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                            {{ __('Profile') }}
+                        </a>
+                        
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            
+                            <button class="dropdown-item" type="submit">
+                                {{ __('Log Out') }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </nav>
+    
 
     <div class="container">
-       <div class="card mt-5">
+        @include('_messages')
+       <div class="card mt-3">
             <div class="card-header">
                 My Tasks
-
                 <a href="{{ url('tasks/create')}}" class="btn btn-outline-primary float-end d-flex align-items-center justify-content-between"> <ion-icon class="fs-5" name="add-circle"></ion-icon> Create Task</a>
             </div>
             <div class="card-body">

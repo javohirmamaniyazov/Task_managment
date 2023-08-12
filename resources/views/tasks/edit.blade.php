@@ -24,12 +24,10 @@
     
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
         <div class="container">
             <a class="navbar-brand" href="/dashboard">Task App</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -41,6 +39,29 @@
                         <a class="nav-link" href="{{ url('tasks/create')}}">New Task</a>
                     </li>
                 </ul>
+            </div>
+    
+            <div class="d-none d-sm-flex items-center ml-3">
+                <div class="dropdown">
+                    <a class="btn btn-light btn-sm dropdown-toggle" href="#" role="button" id="settingsDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ Auth::user()->name }}
+                    
+                    </a>
+            
+                    <div class="dropdown-menu dropdown-menu-left" aria-labelledby="settingsDropdown">
+                        <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                            {{ __('Profile') }}
+                        </a>
+                        
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            
+                            <button class="dropdown-item" type="submit">
+                                {{ __('Log Out') }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
