@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -10,12 +11,13 @@ class TaskController extends Controller
 {
     
     public function index() {
-        $tasks = Task::get();
+        $tasks = Task::with('user')->get();
+        
         return view('dashboard', compact('tasks'));
     }
 
     
-    public function insert(){
+    public function create(){
         return view('tasks.create');
     }
 
@@ -29,15 +31,19 @@ class TaskController extends Controller
         $task = new Task;
         $task->name = $request->name;
         $task->description = $request->description;
+        $task->status = $request->status;
         $task->user_id = Auth::user()->id;
         $task->save();
+
+        return redirect('dashboard')->with('success', 'Task Created Successfully');
     }
 
     
     public function edit($id) {
         $task = Task::findOrFail($id);
-        if(Auth::user()->id == $task->user_id){
-            return view('tasks.edit', compact('task'));
+        if(Auth::user()->id == $task->user_id || Auth::user()->user_type == 1){
+            $creatorName = User::find($task->user_id)->name;
+            return view('tasks.edit', compact('task', 'creatorName'));
         }
 
         return redirect()->back()->with('error', 'You cannot do this action');
@@ -50,12 +56,13 @@ class TaskController extends Controller
             'description' => 'required'
         ]);
         $task = Task::findOrFail($id);
-        if(Auth::user()->id == $task->user_id){
+        if(Auth::user()->id == $task->user_id || Auth::user()->user_type == 1){
             $task->name = $request->name;
             $task->description = $request->description;
+            $task->status = $request->status;
             $task->save();        
 
-            return redirect('tasks.index')->with('success', "Task Successfully Added");
+            return redirect('dashboard')->with('success', "Task Successfully Updated");
         }
 
         return redirect()->back()->with('error', 'You cannot do this action');
@@ -64,13 +71,13 @@ class TaskController extends Controller
     
     public function delete($id) {
         $task = Task::findOrFail($id);
-        if(Auth::user()->id == $task->user_id){
+        if(Auth::user()->id == $task->user_id  || Auth::user()->user_type == 1){
             $task->delete();
 
-            return redirect('tasks/index')->with('success', 'Task Successfully Deleted');
+            return redirect('dashboard')->with('success', 'Task Successfully Deleted');
         }
 
-        return redirect('tasks/index')->with('error', 'You cannot do this action');
+        return redirect('dashboard')->with('error', 'You cannot do this action');
         
     }
 }

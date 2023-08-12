@@ -29,7 +29,7 @@
                         <a class="nav-link active" aria-current="page" href="/dashboard">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">New Task</a>
+                        <a class="nav-link" href="{{ url('tasks/create')}}">New Task</a>
                     </li>
                 </ul>
             </div>
@@ -41,35 +41,47 @@
             <div class="card-header">
                 My Tasks
 
-                <a href="/create" class="btn btn-outline-primary float-end d-flex align-items-center justify-content-between"> <ion-icon class="fs-5" name="add-circle"></ion-icon> Create Task</a>
+                <a href="{{ url('tasks/create')}}" class="btn btn-outline-primary float-end d-flex align-items-center justify-content-between"> <ion-icon class="fs-5" name="add-circle"></ion-icon> Create Task</a>
             </div>
             <div class="card-body">
-                <div class="card">
-                    <div class="card-header">
-                        Title
+                @foreach ($tasks as $task)
+                <div class="card m-2">
+                        <div class="card-header">
+                        {{$task->name}} - Created By: {{ $task->user->name}}
                         <div class="float-end border p-1 rounded-pill bg-warning">
-                            24 second ago
+                             {{ $task->created_at->diffForHumans() }}
                         </div>
                     </div>
                     <div class="card-body p-3">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit ut nam nostrum ad voluptatibus cum maxime dolores et, ea consequatur.
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit ut nam nostrum ad voluptatibus cum maxime dolores et, ea consequatur.
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit ut nam nostrum ad voluptatibus cum maxime dolores et, ea consequatur.
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit ut nam nostrum ad voluptatibus cum maxime dolores et, ea consequatur.
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit ut nam nostrum ad voluptatibus cum maxime dolores et, ea consequatur.
-                        
+                        {{$task->description}}
                         <div class="float-start mt-5 d-flex justify-content-start align-items-center w-50">
-                            <a href="#" class="btn btn-outline-primary" style="margin-right: 2%">
-                                Done
-                            </a> 
-                            Last update - 1 second ago
+                            @if ($task->status == 0)
+                                <span class="btn btn-outline-success" style="margin-right: 2%">
+                                    ToDo
+                                </span> 
+                            @else 
+                                <span class="btn btn-outline-primary" style="margin-right: 2%">
+                                    Done
+                                </span> 
+                            @endif
+                            @if (!empty($task->updated_at))
+                             Last Update {{ $task->updated_at->diffForHumans() }}
+                            @else
+                               Not Updated 
+                            @endif
                         </div>
-                        
-                        <a href="#" class="btn btn-outline-success float-end mt-5 d-flex justify-content-end align-items-center">
-                            <ion-icon class="fs-5" style="margin-right: 10%" name="eye"></ion-icon> Ko'rish
-                        </a>
+                        @if ($task->user_id == auth()->user()->id || auth()->user()->user_type == 1)
+                            <a href="{{route('tasks.delete', $task->id)}}" class="btn btn-outline-danger float-end m-2 mt-5 d-flex justify-content-end align-items-center">
+                                <ion-icon class="fs-5" style="margin-right: 10%" name="trash"></ion-icon> Delete
+                            </a>
+                            <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-outline-warning float-end mr-3 mt-5 d-flex justify-content-end align-items-center">
+                                <ion-icon class="fs-5" style="margin-right: 10%" name="open"></ion-icon> Edit
+                            </a>
+                        @endif
+
                     </div>
                 </div>
+                @endforeach
             </div>
        </div>
     </div>

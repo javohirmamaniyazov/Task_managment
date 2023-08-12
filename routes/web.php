@@ -19,9 +19,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -30,17 +27,17 @@ Route::middleware('auth')->group(function () {
 
     //Tasks
 
-    Route::get('tasks', [TaskController::class, 'index']);
+    Route::get('dashboard', [TaskController::class, 'index'])->name('dashboard');
 
     Route::get('tasks/create', [TaskController::class, 'create']);
     
-    Route::post('tasks/create', [TaskController::class, 'store']);
+    Route::post('tasks/create', [TaskController::class, 'store'])->name('tasks.store');
     
-    Route::get('tasks/edit/{id}', [TaskController::class, 'edit']);
+    Route::get('tasks/edit/{id}', [TaskController::class, 'edit'])->name('tasks.edit');
     
     Route::post('tasks/edit/{id}', [TaskController::class, 'update']);
     
-    Route::get('/tasks/delete/{id}', [TaskController::class, 'delete']);
+    Route::get('/tasks/delete/{id}', [TaskController::class, 'delete'])->name('tasks.delete');
 
 });
 

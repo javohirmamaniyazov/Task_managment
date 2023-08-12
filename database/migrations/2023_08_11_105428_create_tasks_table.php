@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
+            $table->tinyInteger('status')->default(0)->comment('0=todo, 1=done');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
